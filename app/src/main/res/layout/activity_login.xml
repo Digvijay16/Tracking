@@ -31,6 +31,7 @@
                     android:layout_height="wrap_content"
                     android:drawableTint="@color/colorPrimary"
                     android:hint="Username"
+                    android:text="TestUser1"
                     android:inputType="textEmailAddress"
                     android:maxLines="@integer/max_line_1" />
             </android.support.design.widget.TextInputLayout>
@@ -46,6 +47,7 @@
                     android:layout_marginTop="@dimen/dimen_15dp"
                     android:drawableTint="@color/colorPrimary"
                     android:hint="Password"
+                    android:text="User12345"
                     android:inputType="textPassword"
                     android:maxLines="@integer/max_line_1" />
             </android.support.design.widget.TextInputLayout>

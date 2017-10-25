@@ -6,8 +6,8 @@ package admin.tracking.genericClasses;
 
 public class UtilWeb {
 
-    public static final String url = "http://www.motortrackers.com/api/MotorTrackerApi";
-    public static final String loginCheck = url + "LoginCheck";
+    public static final String url = "http://www.motortrackers.com/api/MotorTrackerApi/";
+    public static final String loginCheck = url + "LoginCheck?";
     public static final String getCurrentLocations = url + "GetCurrentLocations";
     public static final String getAllUsers = url + "GetAllUsers";
     public static final String getSingleUser = url + "GetSingleUser";

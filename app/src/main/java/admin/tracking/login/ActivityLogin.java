@@ -25,8 +25,19 @@ import java.util.Map;
 
 import admin.tracking.ActivityMain;
 import admin.tracking.R;
+import admin.tracking.genericClasses.UtilSharedPreference;
 
+import static admin.tracking.genericClasses.UtilConstant.Code_401;
+import static admin.tracking.genericClasses.UtilConstant.Code_404;
+import static admin.tracking.genericClasses.UtilConstant.Email;
+import static admin.tracking.genericClasses.UtilConstant.Message;
+import static admin.tracking.genericClasses.UtilConstant.Name;
 import static admin.tracking.genericClasses.UtilConstant.REQUEST_TIME;
+import static admin.tracking.genericClasses.UtilConstant.StatusCode;
+import static admin.tracking.genericClasses.UtilConstant.Code_200;
+import static admin.tracking.genericClasses.UtilConstant.User_Id;
+import static admin.tracking.genericClasses.UtilMethods.createProgressDialogPopUp;
+import static admin.tracking.genericClasses.UtilMethods.dismissPopUpProgressDialog;
 import static admin.tracking.genericClasses.UtilMethods.isNetworkAvailable;
 import static admin.tracking.genericClasses.UtilMethods.myToast;
 import static admin.tracking.genericClasses.UtilWeb.loginCheck;
@@ -63,8 +74,7 @@ public class ActivityLogin extends AppCompatActivity {
 
 
             if (isNetworkAvailable(this)) {
-//                webserviceLogin();
-                redirectToMainActivity();
+                webserviceLogin();
             } else {
 
                 myToast(this, "" + getResources().getText(R.string.ISAVAILABLE));
@@ -77,31 +87,20 @@ public class ActivityLogin extends AppCompatActivity {
 
 
     private void webserviceLogin() {
+
+        createProgressDialogPopUp(ActivityLogin.this, getResources().getString(R.string.Please_wait));
+        String strUrl=loginCheck +"Username="+edtUsername.getText().toString().trim()+"&Password="+ edtPassword.getText().toString().trim();
         RequestQueue queue = Volley.newRequestQueue(ActivityLogin.this);
-        StringRequest sr = new StringRequest(Request.Method.GET, loginCheck, new Response.Listener<String>() {
+        StringRequest sr = new StringRequest(Request.Method.GET, strUrl, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
-                if (response != null && !response.isEmpty()) {
-                    try {
-                        JSONObject jObjResult = new JSONObject(response);
-                        String msgSuccessful = jObjResult.getString("message");
-                        if (jObjResult.getString("status").equals("200")) {
-
-
-                        } else if (jObjResult.getString("status").equals("203")) {
-
-                        } else if (jObjResult.getString("status").equals("204")) {
-                        } else if (jObjResult.getString("status").equals("500")) {
-                        }
-
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                dismissPopUpProgressDialog();
+                if (response != null) {
+                    getJsonResponse(response);
 
                 } else {
-                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.TRY_AGAIN), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.ERROR), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -112,7 +111,7 @@ public class ActivityLogin extends AppCompatActivity {
         {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                dismissPopUpProgressDialog();
                 myToast(ActivityLogin.this, getResources().getString(R.string.ERROR));
 
             }
@@ -148,6 +147,38 @@ public class ActivityLogin extends AppCompatActivity {
 
     }
 
+    private void getJsonResponse(String response) {
+        try {
+            JSONObject jObjResult = new JSONObject(response);
+            String message = jObjResult.getString(Message);
+            if (jObjResult.getString(StatusCode).equals(Code_200)) {
+                String userId = jObjResult.getString(User_Id);
+                String name = jObjResult.getString(Name);
+                String email = jObjResult.getString(Email);
+
+                UtilSharedPreference.getInstance(ActivityLogin.this).putData(User_Id, userId);
+                UtilSharedPreference.getInstance(ActivityLogin.this).putData(Name, name);
+                UtilSharedPreference.getInstance(ActivityLogin.this).putData(Email, email);
+
+                myToast(ActivityLogin.this, message);
+
+                redirectToMainActivity();
+
+            } else if (jObjResult.getString(StatusCode).equals(Code_401)) {
+                myToast(ActivityLogin.this, message);
+
+            } else if (jObjResult.getString(StatusCode).equals(Code_404)) {
+                myToast(ActivityLogin.this, message);
+
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     //call on clicking forgot password text
     public void clickForgotPassword(View v) {
 
@@ -177,7 +208,8 @@ public class ActivityLogin extends AppCompatActivity {
 
 
     private void redirectToMainActivity() {
-        startActivity(new Intent(ActivityLogin.this, ActivityMain.class));
+        startActivity(new Intent(ActivityLogin.this, ActivityMain.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK));
+        finish();
     }
 
 

@@ -1,5 +1,6 @@
 package admin.tracking;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -25,11 +27,17 @@ import admin.tracking.fragment.FragmentHistory;
 import admin.tracking.fragment.FragmentHome;
 import admin.tracking.fragment.FragmentNotifications;
 import admin.tracking.genericClasses.CircleTransform;
+import admin.tracking.genericClasses.UtilSharedPreference;
 import admin.tracking.menuActivities.ActivityActivities;
 import admin.tracking.menuActivities.ActivityAllVehicles;
 import admin.tracking.menuActivities.ActivityContactUs;
 import admin.tracking.menuActivities.ActivityHistory;
 import admin.tracking.menuActivities.ActivityNotifications;
+
+import static admin.tracking.genericClasses.UtilConstant.Name;
+import static admin.tracking.genericClasses.UtilMethods.gotoLogin;
+import static admin.tracking.genericClasses.UtilMethods.isNetworkAvailable;
+import static admin.tracking.genericClasses.UtilMethods.myToast;
 
 public class ActivityMain extends AppCompatActivity {
 
@@ -138,6 +146,10 @@ public class ActivityMain extends AppCompatActivity {
                         startActivity(new Intent(ActivityMain.this, ActivityContactUs.class));
                         drawer.closeDrawers();
                         return true;
+
+                    case R.id.nav_logout:
+                        alertForLogout();
+                        return true;
                     default:
                         navItemIndex = 0;
                 }
@@ -202,7 +214,7 @@ public class ActivityMain extends AppCompatActivity {
         drawer.closeDrawers();
 
         // refresh toolbar menu
-        invalidateOptionsMenu();
+//        invalidateOptionsMenu();
     }
 
     private void selectNavMenu() {
@@ -275,7 +287,8 @@ public class ActivityMain extends AppCompatActivity {
      */
     private void loadNavHeader() {
         // name, website
-        txtName.setText("Digvijay Machale");
+        txtName.setText(UtilSharedPreference.getInstance(ActivityMain.this).getData(Name));
+
 
         // Loading profile image
         Glide.with(this).load(urlProfileImg)
@@ -354,4 +367,41 @@ public class ActivityMain extends AppCompatActivity {
                 return new FragmentHome();
         }
     }
+
+
+    private void alertForLogout() {
+        try {
+            android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(
+                    ActivityMain.this);
+            alert.create();
+            alert.setTitle("Logout")
+                    .setMessage("Do you want to Logout?")
+                    .setPositiveButton("Yes",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    UtilSharedPreference.getInstance(ActivityMain.this).clearSharedPreferences();
+                                    gotoLogin(ActivityMain.this);
+                                    myToast(ActivityMain.this,"Logged out successfully");
+                                }
+                            })
+                    .setNegativeButton("No",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    // TODO Auto-generated method stub
+                                    dialog.dismiss();
+                                }
+                            });
+            alert.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
 }

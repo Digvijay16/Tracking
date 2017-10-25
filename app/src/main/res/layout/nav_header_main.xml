@@ -16,18 +16,19 @@
 
     <ImageView
         android:id="@+id/img_profile"
-        android:layout_width="@dimen/dimen_100dp"
-        android:layout_height="@dimen/dimen_100dp"
+        android:layout_width="@dimen/dimen_80dp"
+        android:layout_height="@dimen/dimen_80dp"
         android:layout_centerInParent="true"
         app:srcCompat="@android:drawable/sym_def_app_icon" />
 
     <TextView
         android:id="@+id/txtName"
+        android:padding="@dimen/dimen_5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/img_profile"
         android:layout_centerHorizontal="true"
-        android:text="Digvijay Machale"
-        android:textSize="@dimen/dimen_18dp" />
+        android:text="CZar"
+        android:textSize="@dimen/dimen_12dp" />
 
 </RelativeLayout>
