@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">CZar</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+
+
+    //Activity name
+    <string name="all_vehicle">All Vehicle</string>
+    <string name="history">History</string>
+    <string name="activities">Activities</string>
+    <string name="notifications">Notifications</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="ISAVAILABLE">Please check internet connection.</string>
+
+    //Error messages
+    <string name="TRY_AGAIN">Unable to connect to the server. Please try after some time.</string>
+    <string name="ERROR">Something went wrong. Please try again later.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!-- Toolbar titles when navigation menu item is selected -->
+    <string-array name="nav_item_activity_titles">
+        <item>Home</item>
+        <item>All Vehicle</item>
+        <item>History</item>
+        <item>Activities</item>
+        <item>Notifications</item>
+    </string-array>
+</resources>
